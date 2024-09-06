@@ -4,7 +4,7 @@ A simple 'needle in a haystack' analysis to test in-context retrieval ability of
 
 Supported model providers: OpenAI, Anthropic, Cohere
 
-Get the behind the scenes on the [overview video](https://youtu.be/KwRRuiCCdmc).
+Get the behind the scenes on the [overview video](https://youtu.be/KwRRuCCdmc).
 
 ![GPT-4-128 Context Testing](img/NeedleHaystackCodeSnippet.png)
 
@@ -74,6 +74,7 @@ Following command runs the test for cohere model `command-r` for a single contex
 ```zsh
 needlehaystack.run_test --provider cohere --model_name "command-r" --document_depth_percents "[50]" --context_lengths "[2000]"
 ```
+
 ### For Contributors
 
 1. Fork and clone the repository.
@@ -110,6 +111,8 @@ The package `needlehaystack` is available for import in your test cases. Develop
 - `document_depth_percent_interval_type` - Determines the distribution of depths to iterate over. 'linear' or 'sigmoid
 - `seconds_to_sleep_between_completions` - Default: None, set # of seconds if you'd like to slow down your requests
 - `print_ongoing_status` - Default: True, whether or not to print the status of test as they complete
+- `max_retries` - Maximum number of retry attempts for API calls. Default is 5.
+- `base_delay` - Base delay (in seconds) for exponential backoff in retries. Default is 1.0.
 
 `LLMMultiNeedleHaystackTester` parameters:
 
@@ -190,6 +193,14 @@ Here is the command to run this using multi-needle eval and passing the relevant
 ```
 needlehaystack.run_test --evaluator langsmith --context_lengths_num_intervals 3 --document_depth_percent_intervals 3 --provider openai --model_name "gpt-4-0125-preview" --multi_needle True --eval_set multi-needle-eval-pizza --needles '["Figs are one of the three most delicious pizza toppings.", "Prosciutto is one of the three most delicious pizza toppings.", "Goat cheese is one of the three most delicious pizza toppings."]'
 ```
+
+## Error Handling and Retries
+
+The package now includes improved error handling and retry mechanisms for API calls. Both the model evaluation and response evaluation processes will continuously retry in case of rate limit errors or API issues, using an exponential backoff strategy. This ensures more robust testing, especially for long-running tests or when dealing with API rate limits.
+
+## Progress Reporting
+
+The progress reporting has been enhanced to provide more detailed and real-time updates. The progress bar now refreshes in place, giving a cleaner output during long-running tests.
 
 ## License
 

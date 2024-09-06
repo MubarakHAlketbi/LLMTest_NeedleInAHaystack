@@ -1,4 +1,3 @@
-
 from abc import ABC, abstractmethod
 from typing import Optional
 
@@ -14,3 +13,6 @@ class ModelProvider(ABC):
 
     @abstractmethod
     def decode_tokens(self, tokens: list[int], context_length: Optional[int] = None) -> str: ...
+    
+    @abstractmethod
+    async def evaluate_model_with_retry(self, prompt: str, max_retries: int, base_delay: float) -> str: ...
